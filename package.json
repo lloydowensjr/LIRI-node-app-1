@@ -1,0 +1,27 @@
+{
+  "name": "liri-node-app",
+  "version": "1.0.0",
+  "description": "A language interpretation and recognition interface command line node app",
+  "main": "liri.js",
+  "dependencies": {
+    "request": "^2.83.0",
+    "twitter": "^1.7.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JQuinnie/LIRI-node-app.git"
+  },
+  "keywords": [
+    "liri"
+  ],
+  "author": "J Chu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JQuinnie/LIRI-node-app/issues"
+  },
+  "homepage": "https://github.com/JQuinnie/LIRI-node-app#readme"
+}
