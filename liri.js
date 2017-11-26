@@ -15,6 +15,9 @@ switch (userInput) {
 	case "spotify-this-song":
 		spotifyCall(userInputMore);
 		break;
+	case "movie-this":
+		omdbCall(userInputMore);
+		break;
 	default:
 		console.log("Not an available selection.")
 }
@@ -67,9 +70,50 @@ function spotifyCall(userInputMore) {
 		var sSongName = sData.name;
 		var sLink = sData.preview_url;
 		var sAlbum = sData.album.name;
-		console.log(`Artist: ${sArtist} \n` +
+
+		console.log(
+			`Artist: ${sArtist} \n` +
 			`Song Name: ${sSongName} \n` +
 			`Preview Link: ${sLink} \n` +
 			`Album: ${sAlbum} \n`);
 	});
+};
+
+/*** creating OMDB Request functiont communicate with OMDB API ***/
+function omdbCall(){
+	var request = require('request');
+
+	const apiKey = "40e9cece";
+
+	if (!userInputMore) {
+		userInputMore = "Mr. Nobody";
+	}
+
+	var movieName = userInputMore;
+
+	request(`http://www.omdbapi.com/?t=${movieName}&y=&plot=short&apikey=${apiKey}`, function(error, response, body) {
+		
+			if (!error && response.statusCode === 200) {
+				var oData = JSON.parse(body);
+				var rotRating;
+
+				if (!oData.Ratings[0]) {
+					var rotRating = "N/A";
+				} else {
+					var rotRating = oData.Ratings[0].Value;
+				}
+
+				console.log(
+					`Title: ${oData.Title} \n` +
+					`Year: ${oData.Year} \n` +
+					`IMDB Rating: ${oData.imdbRating} \n` +
+					`Rotten Tomatoes Rating: ${rotRating} \n`+
+					`Production Country: ${oData.Country} \n` +
+					`Language: ${oData.Language} \n` +
+					`Plot: ${oData.Plot} \n` +
+					`Actors: ${oData.Actors} \n`
+				);
+			}
+		});
+
 };
