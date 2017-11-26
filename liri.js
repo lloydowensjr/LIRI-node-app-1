@@ -3,17 +3,73 @@ Then store the keys in a variable. */
 
 var key = require("./keys.js");
 
-var Twitter = require('twitter');
+/*** collecting user input and save to variable ***/
+var userInput = process.argv[2];
+var userInputMore = process.argv.slice(3).join(" ");
 
-var client = new Twitter(key.twitter);
+/*** switch statement to cycle through user input selections ***/
+switch (userInput) {
+	case "my-tweets":
+		twitterCall();
+		break;
+	case "spotify-this-song":
+		spotifyCall(userInputMore);
+		break;
+	default:
+		console.log("Not an available selection.")
+}
 
-var params = {
-	count: 20,
+/*** creating Twitter function communicate with Twitter API ***/
+function twitterCall() {
+	var Twitter = require('twitter');
+
+	var tClient = new Twitter(key.twitter);
+
+	var params = {
+		count: 20,
+	};
+
+	tClient.get('statuses/user_timeline', params, function (error, tweets, response) {
+		if (!error) {
+			tweets.forEach(function (tweet) {
+				var tweetDate = tweet.created_at;
+				var tweetDateFormatted = tweetDate.split(' ').slice(0, 4).join(' ')
+				console.log("tweeted: " + tweet.text + " on " + tweetDateFormatted);
+			});
+		} else {
+			console.log(error);
+		}
+
+	});
 };
-client.get('statuses/user_timeline', params, function (error, tweets, response) {
-	if (!error) {
-		console.log(tweets[0].text);
-	} else{
-		console.log(error);
+
+/*** creating Spotify function communication with Spotify API ***/
+function spotifyCall(userInputMore) {
+	var Spotify = require('node-spotify-api');
+
+	var sClient = new Spotify(key.spotify);
+
+	var search = "";
+
+	if (!userInputMore) {
+		userInputMore = "Ace of Base, The Sign";
 	}
-});
+
+	sClient.search({
+		type: 'track',
+		query: userInputMore
+	}, function (err, data) {
+		if (err) {
+			return console.log('Error occurred: ' + err);
+		}
+		var sData = data.tracks.items[0];
+		var sArtist = sData.artists[0].name;
+		var sSongName = sData.name;
+		var sLink = sData.preview_url;
+		var sAlbum = sData.album.name;
+		console.log(`Artist: ${sArtist} \n` +
+			`Song Name: ${sSongName} \n` +
+			`Preview Link: ${sLink} \n` +
+			`Album: ${sAlbum} \n`);
+	});
+};
