@@ -8,19 +8,24 @@ var userInput = process.argv[2];
 var userInputMore = process.argv.slice(3).join(" ");
 
 /*** switch statement to cycle through user input selections ***/
-switch (userInput) {
-	case "my-tweets":
-		twitterCall();
-		break;
-	case "spotify-this-song":
-		spotifyCall(userInputMore);
-		break;
-	case "movie-this":
-		omdbCall(userInputMore);
-		break;
-	default:
-		console.log("Not an available selection.")
-}
+function liriInput(userInput, userInputMore) {
+	switch (userInput) {
+		case "my-tweets":
+			twitterCall();
+			break;
+		case "spotify-this-song":
+			spotifyCall(userInputMore);
+			break;
+		case "movie-this":
+			omdbCall(userInputMore);
+			break;
+		case "do-what-it-says":
+			fsCall();
+			break;
+		default:
+			console.log("Not an available selection.")
+	}
+};
 
 /*** creating Twitter function communicate with Twitter API ***/
 function twitterCall() {
@@ -80,7 +85,7 @@ function spotifyCall(userInputMore) {
 };
 
 /*** creating OMDB Request functiont communicate with OMDB API ***/
-function omdbCall(){
+function omdbCall() {
 	var request = require('request');
 
 	const apiKey = "40e9cece";
@@ -91,29 +96,44 @@ function omdbCall(){
 
 	var movieName = userInputMore;
 
-	request(`http://www.omdbapi.com/?t=${movieName}&y=&plot=short&apikey=${apiKey}`, function(error, response, body) {
-		
-			if (!error && response.statusCode === 200) {
-				var oData = JSON.parse(body);
-				var rotRating;
+	request(`http://www.omdbapi.com/?t=${movieName}&y=&plot=short&apikey=${apiKey}`, function (error, response, body) {
 
-				if (!oData.Ratings[0]) {
-					var rotRating = "N/A";
-				} else {
-					var rotRating = oData.Ratings[0].Value;
-				}
+		if (!error && response.statusCode === 200) {
+			var oData = JSON.parse(body);
+			var rotRating;
 
-				console.log(
-					`Title: ${oData.Title} \n` +
-					`Year: ${oData.Year} \n` +
-					`IMDB Rating: ${oData.imdbRating} \n` +
-					`Rotten Tomatoes Rating: ${rotRating} \n`+
-					`Production Country: ${oData.Country} \n` +
-					`Language: ${oData.Language} \n` +
-					`Plot: ${oData.Plot} \n` +
-					`Actors: ${oData.Actors} \n`
-				);
+			if (!oData.Ratings[0]) {
+				var rotRating = "N/A";
+			} else {
+				var rotRating = oData.Ratings[0].Value;
 			}
-		});
 
+			console.log(
+				`Title: ${oData.Title} \n` +
+				`Year: ${oData.Year} \n` +
+				`IMDB Rating: ${oData.imdbRating} \n` +
+				`Rotten Tomatoes Rating: ${rotRating} \n` +
+				`Production Country: ${oData.Country} \n` +
+				`Language: ${oData.Language} \n` +
+				`Plot: ${oData.Plot} \n` +
+				`Actors: ${oData.Actors} \n`
+			);
+		}
+	});
 };
+
+/*** creating fs Node package function to run from random.txt ***/
+function fsCall() {
+	var fs = require('fs');
+
+	fs.readFile("random.txt", "utf8", function (error, data) {
+		if (error) {
+			return console.log(error);
+		} else {
+			userInput = data.split(",");
+			liriInput(userInput[0], userInput[1]);
+		}
+	});
+}
+
+liriInput(userInput, userInputMore);
