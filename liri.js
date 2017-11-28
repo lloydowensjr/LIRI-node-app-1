@@ -2,6 +2,7 @@
 Then store the keys in a variable. */
 
 var key = require("./keys.js");
+var fs = require('fs');
 
 /*** collecting user input and save to variable ***/
 var userInput = process.argv[2];
@@ -25,6 +26,13 @@ function liriInput(userInput, userInputMore) {
 		default:
 			console.log("Not an available selection.")
 	}
+
+	fs.appendFile("log.txt", userInput + " " + userInputMore + ` \n`, function (err) {
+
+		if (err) {
+			console.log(err);
+		}
+	});
 };
 
 /*** creating Twitter function communicate with Twitter API ***/
