@@ -1,5 +1,5 @@
-/* At the top of the liri.js file, write the code you need to grab the data from keys.js.
-Then store the keys in a variable. */
+/*** At the top of the liri.js file, write the code you need to grab the data from keys.js.
+Then store the keys in a variable. fs stores to node. ***/
 
 var key = require("./keys.js");
 var fs = require('fs');
@@ -27,8 +27,8 @@ function liriInput(userInput, userInputMore) {
 			console.log("Not an available selection.")
 	}
 
+	/*** append data into the log file of what user searched ***/
 	fs.appendFile("log.txt", userInput + " " + userInputMore + ` \n`, function (err) {
-
 		if (err) {
 			console.log(err);
 		}
@@ -92,7 +92,7 @@ function spotifyCall(userInputMore) {
 	});
 };
 
-/*** creating OMDB Request functiont communicate with OMDB API ***/
+/*** creating OMDB Request function communicate with OMDB API ***/
 function omdbCall() {
 	var request = require('request');
 
@@ -144,4 +144,5 @@ function fsCall() {
 	});
 }
 
+/*** calling function to start liri with user inputs ***/
 liriInput(userInput, userInputMore);
